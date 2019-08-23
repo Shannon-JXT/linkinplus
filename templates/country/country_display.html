@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Title
+{% endblock %}
+
+
+{% block content %}
+    {% for country in countries %}
+        <button type="button" class="btn btn-default navbar-btn">
+            {{ country.country_name }}
+        </button>
+    {% endfor %}
+    <p>{{ country}}</p>
+{% endblock %}
