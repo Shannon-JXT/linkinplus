@@ -21,5 +21,6 @@ from Country.views import country_display
 urlpatterns = [
     path('', views.home, name='home'),
     path('admin/', admin.site.urls),
+    path('about/', views.about, name='about'),
     path('country/', include('Country.urls')),
 ]
