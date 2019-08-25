@@ -1,21 +1,22 @@
 {% extends 'layout.html' %}
+{% load staticfiles %}
 
 {% block title %}
     Home Page
 {% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="/static/home.css">
+    <!-- <link rel="stylesheet" href="/static/home.css"> -->
+
     <section id="main-slider" class="no-margin">
         <div class="carousel slide">
             <ol class="carousel-indicators">
                 <li data-target="#main-slider" data-slide-to="0" class="active"></li>
                 <li data-target="#main-slider" data-slide-to="1"></li>
-                <li data-target="#main-slider" data-slide-to="2"></li>
+               <!-- <li data-target="#main-slider" data-slide-to="2"></li> -->
             </ol>
             <div class="carousel-inner">
-
-                <div class="item active" style="background-image: url(images/slider/bg1.jpg)">
+                <div class="item active" style="background-image: url({% static 'images/bg1.jpg' %})">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-7">
@@ -34,7 +35,7 @@
                 </div>
                 <!--/.item-->
 
-                <div class="item" style="background-image: url(images/slider/bg2.jpg)">
+                <div class="item" style="background-image: url({% static 'images/bg2.jpg' %})">
                     <div class="container">
                         <div class="row">
                             <div class="col-md-7">
@@ -59,10 +60,10 @@
         </div>
         <!--/.carousel-->
         <a class="prev hidden-xs hidden-sm" href="#main-slider" data-slide="prev">
-            <span class="glyphicon glyphicon-chevron-left"></span>
+            <span class="fa fa-chevron-left"></span>
         </a>
         <a class="next hidden-xs hidden-sm" href="#main-slider" data-slide="next">
-            <span class="glyphicon glyphicon-chevron-right"></span>
+            <span class="fa fa-chevron-right"></span>
         </a>
     </section>
     <!--/#main-slider-->
