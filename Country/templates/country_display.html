@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-    Title
+    Country Information
 {% endblock %}
 
 
@@ -17,7 +17,7 @@
                             <div class="parrent pull-left">
                                 <ul class="nav nav-tabs nav-stacked">
                                     {% for country in countries %}
-                                        <li class=""><a href="#tab{{ country.id }}" data-toggle="tab" class="analistic-01">
+                                        <li class=""><a href="#tab{{ country.id }}" data-toggle="tab" class="tehnical">
                                             {{ country.country_name }}
                                         </a></li>
                                     {% endfor %}
@@ -33,6 +33,7 @@
 
                             <div class="parrent media-body">
                                 <div class="tab-content">
+                                    <!--
                                     <div class="tab-pane fade" id="tab1">
                                         <div class="media">
                                             <div class="pull-left">
@@ -51,18 +52,12 @@
                                             <a class="video-icon" href="http://www.youtube.com/watch?v=cH6kxtzovew" rel="prettyPhoto"><i class="fa fa-play"></i></a>
                                         </div>
                                     </div>
-
-                                    <div class="tab-pane fade" id="tab3">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit.</p>
-                                    </div>
-
-                                    <div class="tab-pane fade" id="tab4">
-                                        <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words</p>
-                                    </div>
-
-                                    <div class="tab-pane fade" id="tab5">
-                                        <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures,</p>
-                                    </div>
+                                    -->
+                                    {% for country in countries %}
+                                        <div class="tab-pane fade" id="tab{{ country.id }}">
+                                            <p>{{ country.country_info }}</p>
+                                        </div>
+                                    {% endfor %}
                                 </div>
                                 <!--/.tab-content-->
                             </div>
