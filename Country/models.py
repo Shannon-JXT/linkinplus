@@ -9,3 +9,12 @@ class Country(models.Model):
 
     def __str__(self):
         return "<Country: %s>" % self.country_name
+
+class Region(models.Model):
+    region_name = models.CharField(max_length=50)
+    migrant_num = models.IntegerField(default=0)
+    country_name = models.ForeignKey(Country, on_delete=models.DO_NOTHING)
+    year = models.IntegerField(default=1996)
+
+    def __str__(self):
+        return "<Region: %s  Migrant: %s>" % (self.region_name, self.migrant_num)
