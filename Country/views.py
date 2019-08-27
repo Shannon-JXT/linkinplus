@@ -8,19 +8,21 @@ def country_display(request):
     context['countries'] = Country.objects.all()
     return render_to_response("country_display.html", context)
 
+def region_trend(request, country_pk=None):
+    if country_pk is None:
+        data = Region.objects.all()
+    else:
+        data = get_object_or_404(Region, pk=country_pk)
 
-def region_trend(request):
-    context = {}
-    context['numbers'] = Region.objects.all()
-    dataset = []
-    for item in context['numbers']:
-        obj = {}
-        obj["region"] = item.state_name
-        obj["number"] = item.migrant_num
-        obj["year"] = item.year
-        obj["country"] = item.country_name
-        dataset.append(obj)
-    #context['state'] = get_object_or_404(State, pk=state_pk)
-    return render_to_response("region_trend.html", {
-        'dataset': json.dumps(dataset)
-    })
+    dic = {}
+    for item in data:
+        temp = { \
+            'year':item.year, \
+            'num':item.migrant_num, \
+            'region':item.region_name \
+        }
+        if str(item.country_name) in dic:
+            dic[str(item.country_name)].append(temp)
+        else:
+            dic[str(item.country_name)] = [temp]
+    return render_to_response("region_trend.html", {'trends': json.dumps(dic)})

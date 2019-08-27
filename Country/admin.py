@@ -17,4 +17,4 @@ class CountryAdmin(admin.ModelAdmin):
 @admin.register(Region)
 class RegionAdmin(ImportExportModelAdmin):
     list_display = ('id', 'year', 'region_name', 'country_name', 'migrant_num')
-    ordering = ('year',)
+    ordering = ('id',)

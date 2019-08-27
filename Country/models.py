@@ -8,7 +8,7 @@ class Country(models.Model):
     last_updated_time = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "<Country: %s>" % self.country_name
+        return self.country_name
 
 class Region(models.Model):
     region_name = models.CharField(max_length=50)
