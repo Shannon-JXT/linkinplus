@@ -6,110 +6,148 @@
 {% endblock %}
 
 {% block content %}
-<script src="http://d3js.org/d3.v3.min.js"></script>
-<link rel="stylesheet" href="/static/css/region-trend.css">
-<!--
-<div class="dropdown">
-    <button class="btn btn-default dropdown-toggle" type="button" id="country_select" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-    Country:
-    <span class="fa fa-angle-down"></span>
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-        {% for country in trends %}
-            <li><a href="#">country</a></li>
-        {% endfor %}
+    <link rel="stylesheet" href="/static/css/region-trend.css">
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
-  </ul>
-</div>
+    <div class="page-title" style="background-image: url({% static 'images/page-title.jpg' %})">
+        <h1>Migrantion Trends</h1>
+    </div>
 
--->
+    <div class="trend-container">
+        <div class="">
+            <div class="dropdown select-area">
+                <table><tr>
+                        <td><p class="country-font">Country:&nbsp;&nbsp;</p></td>
+                        <td>
+                            <select class="btn btn-default dropdown-toggle" id="selectButton">
+                                <option value="no">Select a Country</option>
+                            </select>
+                        </td>
+                    </tr></table>
+            </div>
 
-<div>
-    <!-- load the d3.js library -->
+            <div id="my_dataviz" class="pic-form"></div>
 
-<script>
-// Set the dimensions of the canvas / graph
-var margin = {top: 30, right: 20, bottom: 70, left: 50},
-    width = 600 - margin.left - margin.right,
-    height = 300 - margin.top - margin.bottom;
-// Parse the date / time
-var parseDate = d3.time.format("%Y").parse;
-// Set the ranges
-var x = d3.time.scale().range([0, width]);
-var y = d3.scale.linear().range([height, 0]);
-// Define the axes
-var xAxis = d3.svg.axis().scale(x)
-    .orient("bottom").ticks(5);
-var yAxis = d3.svg.axis().scale(y)
-    .orient("left").ticks(5);
-// Define the line
-var priceline = d3.svg.line()
-    .x(function(d) { return x(d.Year); })
-    .y(function(d) { return y(d.Number); });
+            <script>
+                // set the dimensions and margins of the graph
+                var margin = {top: 10, right: 10, bottom: 30, left: 45},
+                    width = 600 - margin.left - margin.right,
+                    height = 400 - margin.top - margin.bottom;
 
-// Adds the svg canvas
-var svg = d3.select("body")
-    .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-        .attr("transform",
-              "translate(" + margin.left + "," + margin.top + ")");
-// Get the data
-d3.csv("{% static 'regiontrend.csv' %}", function(error, data) {
-    data.forEach(function(d) {
-		d.Year = parseDate(d.Year);
-		d.Number = +d.Number;
-    });
-    // Scale the range of the data
-    x.domain(d3.extent(data, function(d) { return d.Year; }));
-    y.domain([0, d3.max(data, function(d) { return d.Number; })]);
-    // Nest the entries by symbol
-    var dataNest = d3.nest()
-        .key(function(d) {return d.Country;})
-        .entries(data);
-    var color = d3.scale.category10();   // set the colour scale
-    legendSpace = width/dataNest.length; // spacing for the legend
-    // Loop through each symbol / key
-    dataNest.forEach(function(d,i) {
-        svg.append("path")
-            .attr("class", "line")
-            .style("stroke", function() { // Add the colours dynamically
-                return d.color = color(d.key); })
-            .attr("id", 'tag'+d.key.replace(/\s+/g, '')) // assign ID
-            .attr("d", priceline(d.values));
-        // Add the Legend
-        svg.append("text")
-            .attr("x", (legendSpace/2)+i*legendSpace)  // space legend
-            .attr("y", height + (margin.bottom/2)+ 5)
-            .attr("class", "legend")    // style the legend
-            .style("fill", function() { // Add the colours dynamically
-                return d.color = color(d.key); })
-            .on("click", function(){
-                // Determine if current line is visible
-                var active   = d.active ? false : true,
-                newOpacity = active ? 0 : 1;
-                // Hide or show the elements based on the ID
-                d3.select("#tag"+d.key.replace(/\s+/g, ''))
-                    .transition().duration(100)
-                    .style("opacity", newOpacity);
-                // Update whether or not the elements are active
-                d.active = active;
+                // append the svg object to the body of the page
+                var svg = d3.select("#my_dataviz")
+                    .append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform",
+                          "translate(" + margin.left + "," + margin.top + ")");
+
+                var data_temp = {{ trends|safe }};
+                var data = new Array();
+                for (var i in data_temp) {
+                    data.push(data_temp[i]);
+                }
+
+                // List of groups (here I have one group per column)
+                var allGroup = ["cn", "india", "nz", "en", "vn"]
+
+                // add the options to the button
+                d3.select("#selectButton")
+                    .selectAll('myOptions')
+                    .data(allGroup)
+                    .enter()
+                    .append('option')
+                    .text(function (d) {
+                        var temp = "";
+                        if (d === "cn") {
+                            temp = "China";
+                        } else if (d === "en") {
+                            temp = "United Kingdom";
+                        } else if (d === "india") {
+                            temp = "India";
+                        } else if (d === "nz") {
+                            temp = "New Zealand";
+                        } else {
+                            temp = "Vietnam";
+                        }
+                        return temp; }) // text showed in the menu
+                    .attr("value", function (d) { return d; }) // corresponding value returned by the button
+
+                // Add X axis --> it is a date format
+                var x = d3.scaleLinear()
+                    .domain(d3.extent(data, function(d) { return d.time; }))
+                    .range([ 0, width ]);
+                svg.append("g")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(d3.axisBottom(x));
+
+                // Add Y axis
+                var y = d3.scaleLinear()
+                    .domain( [d3.min(data, function(d) { return d.india; }), d3.max(data, function(d) { return d.en; })])
+                    .range([ height, 0 ]);
+                svg.append("g")
+                    .call(d3.axisLeft(y));
+
+                // Initialize line with group a
+                var line = svg
+                    .append('g')
+                    .append("path")
+                    .datum(data)
+                    .attr("d", d3.line()
+                        //.x(function(d) { return x(+d.time) })
+                        //.y(function(d) { return y(+d.en) })
+                    )
+                    .attr("stroke", "black")
+                    .style("stroke-width", 4)
+                    .style("fill", "none")
+
+                // Initialize dots with group a
+                var dot = svg
+                    .selectAll('circle')
+                    .data(data)
+                    .enter()
+                    .append('circle')
+                    //.attr("cx", function(d) { return x(+d.time) })
+                    //.attr("cy", function(d) { return y(+d.en) })
+                    .attr("r", 7)
+                    .style("fill", "#69b3a2")
+
+
+                // A function that update the chart
+                function update(selectedGroup) {
+                    // Create new data with the selection?
+                    var dataFilter = data.map(function(d){return {time: d.time, value:d[selectedGroup]} })
+
+                    // Give these new data to update line
+                    line.datum(dataFilter)
+                        .transition()
+                        .duration(1000)
+                        .attr("d", d3.line()
+                            .x(function(d) { return x(+d.time) })
+                            .y(function(d) { return y(+d.value) })
+                      )
+
+                    dot.data(dataFilter)
+                        .transition()
+                        .duration(1000)
+                        .attr("cx", function(d) { return x(+d.time) })
+                        .attr("cy", function(d) { return y(+d.value) })
+                }
+
+                // When the button is changed, run the updateChart function
+                d3.select("#selectButton").on("change", function(d) {
+                    // recover the option that has been chosen
+                    var selectedOption = d3.select(this).property("value")
+                    // run the updateChart function with this selected option
+                    update(selectedOption)
                 })
-            .text(d.key);
-    });
-    // Add the X Axis
-    svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
-    // Add the Y Axis
-    svg.append("g")
-        .attr("class", "y axis")
-        .call(yAxis);
-});
-</script>
-</div>
+
+
+            </script>
+        </div>
+    </div>
 {% endblock %}
 
 {% block drop %}

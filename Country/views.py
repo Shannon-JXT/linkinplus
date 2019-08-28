@@ -14,15 +14,35 @@ def region_trend(request, country_pk=None):
     else:
         data = get_object_or_404(Region, pk=country_pk)
 
-    dic = {}
+    year1996 = {'time': 1996}
+    year2001 = {'time': 2001}
+    year2006 = {'time': 2006}
+    year2011 = {'time': 2011}
+    year2016 = {'time': 2016}
     for item in data:
-        temp = { \
-            'year':item.year, \
-            'num':item.migrant_num, \
-            'region':item.region_name \
-        }
-        if str(item.country_name) in dic:
-            dic[str(item.country_name)].append(temp)
-        else:
-            dic[str(item.country_name)] = [temp]
+        name = change_country_name(str(item.country_name))
+        if int(item.year) == 1996:
+            year1996[name] = item.migrant_num
+        if int(item.year) == 2001:
+            year2001[name] = item.migrant_num
+        if int(item.year) == 2006:
+            year2006[name] = item.migrant_num
+        if int(item.year) == 2011:
+            year2011[name] = item.migrant_num
+        if int(item.year) == 2016:
+            year2016[name] = item.migrant_num
+
+    dic = {1996: year1996, 2001: year2001, 2006: year2006, 2011: year2011, 2016: year2016}
     return render_to_response("region_trend.html", {'trends': json.dumps(dic)})
+
+def change_country_name(name):
+    if name == 'China':
+        return 'cn'
+    if name == 'New Zealand':
+        return 'nz'
+    if name == 'India':
+        return 'india'
+    if name == 'United Kingdom':
+        return 'en'
+    if name == 'Vietnam':
+        return 'vn'

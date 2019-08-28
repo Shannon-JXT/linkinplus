@@ -4,8 +4,10 @@ from django.db import models
 class Country(models.Model):
     country_name = models.CharField(max_length=100)
     country_info = models.TextField()
-   # create_time = models.DateTimeField(auto_now_add=True)
-    #last_updated_time = models.DateTimeField(auto_now=True)
+    country_info1 = models.TextField()
+    country_info2 = models.TextField()
+    create_time = models.DateTimeField(auto_now_add=True)
+    last_updated_time = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.country_name

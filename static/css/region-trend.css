@@ -1,5 +1,28 @@
-body {
-    font: 12px Arial;
+.trend-container {
+    margin: 3% 5%;
+}
+
+.trendpage {
+
+}
+
+.select-area {
+    margin: 2% 0;
+}
+
+.country-font {
+    font-size: 20px;
+}
+
+.pic-form {
+    padding: 15px 12px;
+    border: 3px solid;
+    border-radius: 10px;
+    border-color: #f2f2f2;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    height: 470px;
+    width: 50%;
 }
 
 path {
@@ -16,8 +39,3 @@ path {
     shape-rendering: crispEdges;
 }
 
-.legend {
-    font-size: 16px;
-    font-weight: bold;
-    text-anchor: middle;
-}

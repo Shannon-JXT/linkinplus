@@ -11,7 +11,7 @@ class RegionResource(resources.ModelResource):
 # Register your models here.
 @admin.register(Country)
 class CountryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'country_name')#, 'create_time', 'last_updated_time')
+    list_display = ('id', 'country_name', 'create_time', 'last_updated_time')
     ordering = ("id",)
 
 @admin.register(Region)
